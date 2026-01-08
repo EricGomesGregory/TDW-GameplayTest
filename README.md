@@ -8,22 +8,40 @@ In addition the project must result in a scalable and extendable prototype. As w
 
 
 ## Architecture
-
+This section describes the [Lyra Sample Game](https://dev.epicgames.com/documentation/en-us/unreal-engine/lyra-sample-game-in-unreal-engine?application_version=5.0) inspired architecture for this project.
 
 ### Ability System
+
+**TDWAbilitySystemComponent**
+- Ability system component derived class for the project
+
 
 
 #### Attributes
 
-
 **TDWAttributeSet** 
-- Abstract base class for all project attribute sets. 
+- Abstract base class for all project attribute sets
 - Defines the `ATTRIBUTE_ACCESSORS` macro
 
-**TDWHealthSet**
 
-</br>
-</br>
+**TDWHealthSet**
+- Attribute set for handling health/armor/shields as well as healing and damage
+- Defines **Health** and **MaxHealth** protected attributes with public accessors
+- Defines **Damage** and **Healing** meta-attributes
+
+**TDWCharacterSet**
+- Abstract class that defines attributes common to all characters
+- Defines **AttackSpeed** protected attributes with public accessors
+
+**TDWPlayerSet**
+- Attribute set for Player character specific attrobutes
+- Defines **Mana** and **MaxMana** protected attributes
+
+**TDWEnemySet**
+- Attribute set for Enemy character attributes
+- Currently empty but ment to represent a generic enemy in this evaluation.
+
+___
 
 ```mermaid
 classDiagram
@@ -54,6 +72,18 @@ class TDWCharacterSet {
 
 class TDWPlayerSet {
     + Mana
+    + MaxMana
 }
 
 ```
+
+### Character
+
+### Input
+
+### Player
+
+**TDWPlayerState**
+- PlayerState derived class
+- Container for the player's **TDWAbilitySystemComponent** (AbilitySystemComponent), **TDWHealthSet** (HealthSet) and **TDWPlayerSet** (CharacterSet) attribute sets
+
