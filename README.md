@@ -16,11 +16,14 @@ In addition the project must result in a scalable and extendable prototype. As w
 #### Attributes
 
 
-**TDWAttributeSet:** 
+**TDWAttributeSet** 
 - Abstract base class for all project attribute sets. 
 - Defines the `ATTRIBUTE_ACCESSORS` macro
 
-TDWHealthSet
+**TDWHealthSet**
+
+</br>
+</br>
 
 ```mermaid
 classDiagram
