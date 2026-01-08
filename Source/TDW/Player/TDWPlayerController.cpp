@@ -1,18 +1,16 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TDWPlayerController.h"
-#include "GameFramework/Pawn.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "NiagaraSystem.h"
-#include "NiagaraFunctionLibrary.h"
-#include "TDWCharacter.h"
-#include "Engine/World.h"
-#include "EnhancedInputComponent.h"
-#include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
+#include "NiagaraFunctionLibrary.h"
+#include "EnhancedInputComponent.h"
+#include "GameFramework/Pawn.h"
 #include "Engine/LocalPlayer.h"
+#include "Engine/World.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+
 
 ATDWPlayerController::ATDWPlayerController()
 {

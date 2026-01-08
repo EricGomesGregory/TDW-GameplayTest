@@ -1,8 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TDWGameMode.h"
-#include "TDWPlayerController.h"
-#include "TDWCharacter.h"
+#include "TDW/Player/TDWPlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 
 ATDWGameMode::ATDWGameMode()
