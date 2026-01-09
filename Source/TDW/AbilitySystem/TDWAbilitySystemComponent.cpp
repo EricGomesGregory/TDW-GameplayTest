@@ -205,6 +205,12 @@ void UTDWAbilitySystemComponent::ClearAbilityInput()
 	InputHeldSpecHandles.Reset();
 }
 
+int UTDWAbilitySystemComponent::GetAvatarActorLevel()
+{
+	//@Eric TODO: Get Level from current avatar actor
+	return 1;
+}
+
 void UTDWAbilitySystemComponent::TryActivateAbilitiesOnSpawn()
 {
 	ABILITYLIST_SCOPE_LOCK();

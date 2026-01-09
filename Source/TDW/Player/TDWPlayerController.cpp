@@ -41,6 +41,8 @@ void ATDWPlayerController::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	
 }
 
 void ATDWPlayerController::Input_AbilityInputTagPressed(FGameplayTag InputTag)
@@ -57,6 +59,21 @@ void ATDWPlayerController::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 	{
 		ASC->AbilityInputTagReleased(InputTag);
 	}
+}
+
+void ATDWPlayerController::PreProcessInput(const float DeltaTime, const bool bGamePaused)
+{
+	Super::PreProcessInput(DeltaTime, bGamePaused);
+}
+
+void ATDWPlayerController::PostProcessInput(const float DeltaTime, const bool bGamePaused)
+{
+	if (auto* TDWASC = GetTDWAbilitySystemComponent())
+	{
+		TDWASC->ProcessAbilityInput(DeltaTime, bGamePaused);
+	}
+	
+	Super::PostProcessInput(DeltaTime, bGamePaused);
 }
 
 void ATDWPlayerController::SetupInputComponent()

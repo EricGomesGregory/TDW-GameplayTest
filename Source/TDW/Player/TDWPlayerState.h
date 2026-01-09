@@ -26,9 +26,17 @@ public:
 	ATDWPlayerState(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable, Category = "TDW|PlayerState")
-	UTDWAbilitySystemComponent* GetTDWAbilitySystemComponent() const { return AbilitySystemComponent; }
+	FORCEINLINE UTDWAbilitySystemComponent* GetTDWAbilitySystemComponent() const { return AbilitySystemComponent; }
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	UFUNCTION(BlueprintCallable, Category = "TDW|PlayerState")
+	FORCEINLINE UTDWHealthSet* GetHealthSet() const { return HealthSet; }
+
+	UFUNCTION(BlueprintCallable, Category = "TDW|PlayerState")
+	FORCEINLINE UTDWCombatSet* GetCombatSet() const { return CombatSet; }
+
+	UFUNCTION(BlueprintCallable, Category = "TDW|PlayerState")
+	FORCEINLINE UTDWManaSet* GetManaSet() const { return ManaSet; }
 	
 private:
 
@@ -38,13 +46,13 @@ private:
 
 	// Health attribute set used by this actor.
 	UPROPERTY()
-	TObjectPtr<const UTDWHealthSet> HealthSet;
+	TObjectPtr<UTDWHealthSet> HealthSet;
 
 	// Mana attribute set used by this actor.
 	UPROPERTY()
-	TObjectPtr<const UTDWManaSet> ManaSet;
+	TObjectPtr<UTDWManaSet> ManaSet;
 	
 	// Combat attribute set used by this actor.
 	UPROPERTY()
-	TObjectPtr<const UTDWCombatSet> CombatSet;
+	TObjectPtr<UTDWCombatSet> CombatSet;
 };

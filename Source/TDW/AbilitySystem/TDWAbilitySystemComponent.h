@@ -9,7 +9,10 @@
 class UTDWGameplayAbility;
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+/**
+ * 
+ */
+UCLASS()
 class TDW_API UTDWAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
@@ -28,6 +31,8 @@ public:
 
 	void ProcessAbilityInput(float DeltaTime, bool bGamePaused);
 	void ClearAbilityInput();
+
+	int GetAvatarActorLevel();
 	
 protected:
 

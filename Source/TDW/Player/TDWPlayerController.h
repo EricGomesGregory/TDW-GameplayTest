@@ -52,6 +52,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* SetDestinationTouchAction;
 
+	virtual void PreProcessInput(const float DeltaTime, const bool bGamePaused) override;
+	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
+	
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
@@ -73,7 +76,7 @@ protected:
 
 protected:
 
-	UPROPERTY(EditAnywhere, Category=Input)
+	UPROPERTY(EditAnywhere, Category="TDW|Input")
 	TObjectPtr<UTDWInputConfig> InputConfig;
 	
 private:

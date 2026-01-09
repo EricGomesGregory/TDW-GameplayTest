@@ -9,6 +9,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+#include "TDW/AbilitySystem/TDWAbilitySet.h"
+#include "TDW/AbilitySystem/TDWAbilitySystemComponent.h"
+#include "TDW/Player/TDWPlayerState.h"
 
 ATDWCharacter::ATDWCharacter()
 {
@@ -47,4 +50,39 @@ ATDWCharacter::ATDWCharacter()
 void ATDWCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+}
+
+void ATDWCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	InitializeAbilityActorInfo();
+	SetupAbilities();
+}
+
+void ATDWCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	InitializeAbilityActorInfo();
+}
+
+void ATDWCharacter::InitializeAbilityActorInfo()
+{
+	auto* PS = GetPlayerState<ATDWPlayerState>();
+	check(PS);
+
+	AbilitySystemComponent = PS->GetTDWAbilitySystemComponent();
+	AbilitySystemComponent->InitAbilityActorInfo(PS, this);
+	HealthSet = PS->GetHealthSet();
+	CombatSet = PS->GetCombatSet();
+	ManaSet = PS->GetManaSet();
+}
+
+void ATDWCharacter::SetupAbilities()
+{
+	check(AbilitySystemComponent);
+	
+	AbilitySet->GiveToAbilitySystem(AbilitySystemComponent, /** OutGrantedHandles*/ nullptr);
+	//@Eric TODO: Store default abilities granted handles? 
 }
