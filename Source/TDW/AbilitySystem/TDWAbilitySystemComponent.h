@@ -6,6 +6,8 @@
 #include "AbilitySystemComponent.h"
 #include "TDWAbilitySystemComponent.generated.h"
 
+class UTDWGameplayAbility;
+
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TDW_API UTDWAbilitySystemComponent : public UAbilitySystemComponent
@@ -16,12 +18,31 @@ public:
 	// Sets default values for this component's properties
 	UTDWAbilitySystemComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	typedef TFunctionRef<bool(const UTDWGameplayAbility* LyraAbility, FGameplayAbilitySpecHandle Handle)> TShouldCancelAbilityFunc;
+	void CancelAbilitiesByFunc(TShouldCancelAbilityFunc ShouldCancelFunc, bool bReplicateCancelAbility);
 
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+	void CancelInputActivatedAbilities(bool bReplicateCancelAbility);
+
+	void AbilityInputTagPressed(const FGameplayTag& InputTag);
+	void AbilityInputTagReleased(const FGameplayTag& InputTag);
+
+	void ProcessAbilityInput(float DeltaTime, bool bGamePaused);
+	void ClearAbilityInput();
+	
+protected:
+
+	void TryActivateAbilitiesOnSpawn();
+
+	virtual void AbilitySpecInputPressed(FGameplayAbilitySpec& Spec) override;
+	virtual void AbilitySpecInputReleased(FGameplayAbilitySpec& Spec) override;
+	
+protected:
+	// Handles to abilities that had their input pressed this frame.
+	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
+
+	// Handles to abilities that had their input released this frame.
+	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
+
+	// Handles to abilities that have their input held.
+	TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
 };
