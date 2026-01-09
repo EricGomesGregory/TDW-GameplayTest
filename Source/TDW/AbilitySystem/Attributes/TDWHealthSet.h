@@ -66,9 +66,9 @@ private:
 	// Meta Attributes      //
 	// -------------------- //
 
-	UPROPERTY(BlueprintReadOnly, Category="TDW|Health", Meta=(AllowPrivateAccess=true))
+	UPROPERTY(BlueprintReadOnly, Category="TDW|Health", Meta=(AllowPrivateAccess = true))
 	FGameplayAttributeData Healing;
 
-	UPROPERTY(BlueprintReadOnly, Category="TDW|Health", Meta=(HideFromModifiers, AllowPrivateAccess=true))
+	UPROPERTY(BlueprintReadOnly, Category="TDW|Health", Meta=(HideFromModifiers, AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;
 };

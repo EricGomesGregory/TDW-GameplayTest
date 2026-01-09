@@ -12,7 +12,9 @@
 UTDWHealthSet::UTDWHealthSet()
 : Health(100.0f), MaxHealth(100.0f)
 {
-	
+	bOutOfHealth = false;
+	MaxHealthBeforeAttributeChange = 0.0f;
+	HealthBeforeAttributeChange = 0.0f;
 }
 
 void UTDWHealthSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

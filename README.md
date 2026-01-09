@@ -26,20 +26,18 @@ This section describes the [Lyra Sample Game](https://dev.epicgames.com/document
 
 **TDWHealthSet**
 - Attribute set for handling health/armor/shields as well as healing and damage
-- Defines **Health** and **MaxHealth** protected attributes with public accessors
-- Defines **Damage** and **Healing** meta-attributes
+- Defines Health and MaxHealth protected attributes with public accessors
+- Defines Damage and Healing meta-attributes
 
-**TDWCharacterSet**
-- Abstract class that defines attributes common to all characters
-- Defines **AttackSpeed** protected attributes with public accessors
+**TDWCombatSet**
+- Attribute set for combat attributes such as attack speed, etc
+- Defines AttackSpeed protected attribute with public accessors
 
-**TDWPlayerSet**
-- Attribute set for Player character specific attrobutes
-- Defines **Mana** and **MaxMana** protected attributes
+**TDWManaSet**
+- Attribute set for handling mana as well as spending and recovering it
+- Defines Mana and MaxMana protected attributes with public accessors
+- Defines Spending and Recovering meta-attributes
 
-**TDWEnemySet**
-- Attribute set for Enemy character attributes
-- Currently empty but ment to represent a generic enemy in this evaluation.
 
 ___
 
@@ -48,11 +46,10 @@ classDiagram
 
 TDWAttributeSet --|> TDWHealthSet
 
-TDWAttributeSet --|> TDWCharacterSet
+TDWAttributeSet --|> TDWCombatSet
 
-TDWCharacterSet --|> TDWEnemySet
+TDWAttributeSet --|> TDWManaSet
 
-TDWCharacterSet --|> TDWPlayerSet
 
 class TDWAttributeSet {
     GetWorld()
@@ -66,13 +63,15 @@ class TDWHealthSet {
     + Healing
 }
 
-class TDWCharacterSet {
+class TDWCombatSet {
     + AttackSpeed
 }
 
-class TDWPlayerSet {
+class TDWManaSet {
     + Mana
     + MaxMana
+    + Spending
+    + Recovering
 }
 
 ```
