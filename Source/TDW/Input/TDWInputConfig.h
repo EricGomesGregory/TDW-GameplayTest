@@ -8,8 +8,30 @@
 #include "TDWInputConfig.generated.h"
 
 
+class UInputMappingContext;
 class UInputAction;
 
+USTRUCT(BlueprintType)
+struct FInputMappingContextAndPriority
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UInputMappingContext> InputMapping = nullptr;
+
+	// Higher priority input mappings will be prioritized over mappings with a lower priority.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 Priority = 0;
+
+	// If true, then this mapping context will be registered with the settings when this game feature action is registered.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	bool bRegisterWithSettings = true;
+};
+
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FTDWInputAction
 {
@@ -49,4 +71,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(TitleProperty = "InputAction"))
 	TArray<FTDWInputAction> AbilityInputActions;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray<FInputMappingContextAndPriority> DefaultInputMappings;
 };

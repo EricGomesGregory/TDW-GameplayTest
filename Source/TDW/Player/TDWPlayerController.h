@@ -3,14 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
 #include "TDWPlayerController.generated.h"
 
-/** Forward declaration to improve compiling times */
+class ATDWPlayerState;
+class UTDWAbilitySystemComponent;
 class UNiagaraSystem;
 class UInputMappingContext;
 class UInputAction;
+class UTDWInputConfig;
+
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -22,6 +26,12 @@ class ATDWPlayerController : public APlayerController
 public:
 	ATDWPlayerController();
 
+	UFUNCTION(BlueprintCallable, Category = "TDW|PlayerController")
+	ATDWPlayerState* GetTDWPlayerState() const;
+
+	UFUNCTION(BlueprintCallable, Category = "TDW|PlayerController")
+	UTDWAbilitySystemComponent* GetTDWAbilitySystemComponent() const;
+	
 	/** Time Threshold to know if it was a short press */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	float ShortPressThreshold;
@@ -51,13 +61,21 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
+	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
+	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
+	
 	/** Input handlers for SetDestination action. */
-	void OnInputStarted();
-	void OnSetDestinationTriggered();
-	void OnSetDestinationReleased();
-	void OnTouchTriggered();
-	void OnTouchReleased();
+	void Input_StopMovement();
+	void Input_SetDestinationTriggered();
+	void Input_SetDestinationReleased();
+	//void OnTouchTriggered();
+	//void OnTouchReleased();
 
+protected:
+
+	UPROPERTY(EditAnywhere, Category=Input)
+	TObjectPtr<UTDWInputConfig> InputConfig;
+	
 private:
 	FVector CachedDestination;
 
