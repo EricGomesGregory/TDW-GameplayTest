@@ -2,7 +2,7 @@
 
 
 #include "TDWInputConfig.h"
-#include "TDW/TDW.h"
+#include "TDW/TDWLogChannels.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(TDWInputConfig)
 
