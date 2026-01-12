@@ -113,6 +113,8 @@ void UTDWAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGame
 	static TArray<FGameplayAbilitySpecHandle> AbilitiesToActivate;
 	AbilitiesToActivate.Reset();
 
+	//@TODO: See if we can use FScopedServerAbilityRPCBatcher ScopedRPCBatcher in some of these loops
+
 	//
 	// Process all abilities that activate when the input is held.
 	//
@@ -122,7 +124,7 @@ void UTDWAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGame
 		{
 			if (AbilitySpec->Ability && !AbilitySpec->IsActive())
 			{
-				const auto* TDWAbilityCDO = CastChecked<UTDWGameplayAbility>(AbilitySpec->Ability);
+				const UTDWGameplayAbility* TDWAbilityCDO = CastChecked<UTDWGameplayAbility>(AbilitySpec->Ability);
 
 				if (TDWAbilityCDO->GetActivationPolicy() == EAbilityActivationPolicy::WhileInputActive)
 				{
@@ -164,7 +166,7 @@ void UTDWAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGame
 	//
 	// Try to activate all the abilities that are from presses and holds.
 	// We do it all at once so that held inputs don't activate the ability
-	// and then also send a input event to the ability because of the press.
+	// and then also send an input event to the ability because of the press.
 	//
 	for (const FGameplayAbilitySpecHandle& AbilitySpecHandle : AbilitiesToActivate)
 	{
@@ -228,8 +230,8 @@ void UTDWAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec& S
 	if (Spec.IsActive())
 	{
 		// Invoke the InputPressed event. This is not replicated here. If someone is listening, they may replicate the InputPressed event to the server.
-		const auto ActivationPredictionKey = Spec.Ability->GetCurrentActivationInfo().GetActivationPredictionKey();
-		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, ActivationPredictionKey);
+		const auto ActivationInfo = Spec.Ability->GetCurrentActivationInfo();
+		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, ActivationInfo.GetActivationPredictionKey());
 	}
 }
 
@@ -240,8 +242,10 @@ void UTDWAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilitySpec& 
 	if (Spec.IsActive())
 	{
 		// Invoke the InputReleased event. This is not replicated here. If someone is listening, they may replicate the InputReleased event to the server.
-		const auto ActivationPredictionKey = Spec.Ability->GetCurrentActivationInfo().GetActivationPredictionKey();
-		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, Spec.Handle, ActivationPredictionKey);
+		const auto ActivationInfo = Spec.Ability->GetCurrentActivationInfo();
+		const auto* Instance = Spec.GetPrimaryInstance();
+		const auto OriginalPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : ActivationInfo.GetActivationPredictionKey();
+		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, Spec.Handle, OriginalPredictionKey);
 	}
 }
 
