@@ -7,6 +7,7 @@
 #include "Abilities/Tasks/AbilityTask_ApplyRootMotionJumpForce.h"
 #include "GameFramework/Character.h"
 #include "TDW/AbilitySystem/TDWAbilitySystemComponent.h"
+#include "TDW/Character/TDWCombatComponent.h"
 #include "TDW/Player/TDWPlayerController.h"
 
 
@@ -15,12 +16,10 @@ UTDWGameplayAbility_Leap::UTDWGameplayAbility_Leap()
 	MaxLeapDistance = 1200.f;
 	MinLeapDistance = 300.f;
 	LeapHeightCurve = NewObject<UCurveFloat>();
-	LeapHeightCurve->FloatCurve.UpdateOrAddKey(0.0f, 150.0f);
-	LeapHeightCurve->FloatCurve.UpdateOrAddKey(1.0f, 600.0f);
-	LeapDuration	= 0.7f;
-
-	LandingAbilities.Empty();
+	LeapDurationCurve = NewObject<UCurveFloat>();
+	DefaultLeapDuration = 0.7f;
 	
+	LandingAbilities.Empty();
 	ChildAbilitySpecHandles.Empty();
 }
 
@@ -98,7 +97,8 @@ void UTDWGameplayAbility_Leap::ActivateAbility(const FGameplayAbilitySpecHandle 
 	const FRotator Rotation = (TargetLocation - Character->GetActorLocation()).Rotation();
 	Character->SetActorRotation(FRotator(0.f, Rotation.Yaw, 0.f));
 
-	const float LeapHeight = ResolveJumpHeight(Distance);
+	const float LeapHeight = ResolveLeapHeight(Distance);
+	const float LeapDuration = ResolveLeapDuration(ActorInfo);
 	
 	auto* JumpTask = UAbilityTask_ApplyRootMotionJumpForce::ApplyRootMotionJumpForce(
 		this,
@@ -177,10 +177,24 @@ FVector UTDWGameplayAbility_Leap::ResolveTargetLocation(const FGameplayAbilityAc
 	return Avatar->GetActorLocation() + Avatar->GetActorForwardVector() * MaxLeapDistance;
 }
 
-float UTDWGameplayAbility_Leap::ResolveJumpHeight(const float Distance) const
+float UTDWGameplayAbility_Leap::ResolveLeapHeight(const float Distance) const
 {
 	const float Percentage = Distance / MaxLeapDistance;
 	return LeapHeightCurve->GetFloatValue(Percentage);
+}
+
+float UTDWGameplayAbility_Leap::ResolveLeapDuration(const FGameplayAbilityActorInfo* ActorInfo) const
+{
+	const auto* Avatar = ActorInfo->AvatarActor.Get();
+	check(Avatar);
+
+	if (auto* AvatarCombatComponent = UTDWCombatComponent::FindCombatComponent(Avatar))
+	{
+		auto CurrentAttackSpeed = AvatarCombatComponent->GetAttackSpeed();
+		return LeapDurationCurve->GetFloatValue(CurrentAttackSpeed);
+	}
+
+	return DefaultLeapDuration;
 }
 
 bool UTDWGameplayAbility_Leap::FindGroundAtLocation(const FVector& InLocation, FVector& OutGroundLocation, float TraceUp, float TraceDown) const

@@ -29,7 +29,8 @@ protected:
 	void OnLanded();
 	
 	FVector ResolveTargetLocation(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayEventData* TriggerEventData) const;
-	float ResolveJumpHeight(const float Distance) const;
+	float ResolveLeapHeight(const float Distance) const;
+	float ResolveLeapDuration(const FGameplayAbilityActorInfo* ActorInfo) const;
 	
 	bool FindGroundAtLocation(const FVector& InLocation, FVector& OutGroundLocation, float TraceUp = 500.f, float TraceDown = 2000.f) const;
 	
@@ -45,8 +46,11 @@ protected:
 	TObjectPtr<UCurveFloat> LeapHeightCurve;
 
 	UPROPERTY(EditDefaultsOnly, Category="TDW|Ability")
-	float LeapDuration;
+	TObjectPtr<UCurveFloat> LeapDurationCurve;
 
+	UPROPERTY(EditDefaultsOnly, Category="TDW|Ability")
+	float DefaultLeapDuration;
+	
 	UPROPERTY(EditDefaultsOnly, Category="TDW|Ability")
 	TArray<TSubclassOf<UTDWGameplayAbility>> LandingAbilities;
 
