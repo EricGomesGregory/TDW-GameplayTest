@@ -71,6 +71,6 @@ private:
 	UPROPERTY(BlueprintReadOnly, Category="TDW|Mana", Meta=(AllowPrivateAccess = true))
 	FGameplayAttributeData Recovering;
 
-	UPROPERTY(BlueprintReadOnly, Category="TDW|Mana", Meta=(HideFromModifiers, AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category="TDW|Mana", Meta=(AllowPrivateAccess = true))
 	FGameplayAttributeData Spending;
 };

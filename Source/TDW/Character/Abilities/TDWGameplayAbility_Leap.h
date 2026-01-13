@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, Blueprintable)
 class TDW_API UTDWGameplayAbility_Leap : public UTDWGameplayAbility
 {
 	GENERATED_BODY()
@@ -22,8 +22,12 @@ protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
+	UFUNCTION()
+	void OnLanded();
+	
 	FVector ResolveTargetLocation(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayEventData* TriggerEventData) const;
-
+	float ResolveJumpHeight(const float Distance) const;
+	
 	bool FindGroundAtLocation(const FVector& InLocation, FVector& OutGroundLocation, float TraceUp = 500.f, float TraceDown = 2000.f) const;
 	
 protected:
@@ -35,7 +39,7 @@ protected:
 	float MinLeapDistance;
 
 	UPROPERTY(EditDefaultsOnly, Category="TDW|Ability")
-	float LeapHeight;
+	TObjectPtr<UCurveFloat> LeapHeightCurve;
 
 	UPROPERTY(EditDefaultsOnly, Category="TDW|Ability")
 	float LeapDuration;
