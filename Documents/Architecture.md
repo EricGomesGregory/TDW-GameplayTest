@@ -86,10 +86,10 @@ class TDWManaSet {
     - Determined by the mouse for player triggered ability
 - (Optional) Triggers a child ability on landing
 
-**UTDWGameplayAbility_Burst**
+**UTDWGameplayAbility_Emanation**
 - TDWGameplayAbility derived class
 - Passive ability
-- Applies a list of *GameplayEffects* to characters in a radius
+- Applies a list of *GameplayEffects* to characters in a radius centered around the avatar actor of the ability
 
 
 ## Input
