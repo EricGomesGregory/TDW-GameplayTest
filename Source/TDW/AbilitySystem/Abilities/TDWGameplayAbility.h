@@ -6,6 +6,9 @@
 #include "Abilities/GameplayAbility.h"
 #include "TDWGameplayAbility.generated.h"
 
+class ATDWPlayerController;
+class ATDWCharacter;
+class UTDWAbilitySystemComponent;
 /**
  * 
  */
@@ -28,6 +31,18 @@ class TDW_API UTDWGameplayAbility : public UGameplayAbility
 public:
 	UTDWGameplayAbility();
 
+	UFUNCTION(BlueprintCallable, Category = "TDW|Ability")
+	UTDWAbilitySystemComponent* GetTDWAbilitySystemComponentFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "TDW|Ability")
+	ATDWPlayerController* GetTDWPlayerControllerFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "TDW|Ability")
+	AController* GetControllerFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "TDW|Ability")
+	ATDWCharacter* GetTDWCharacterFromActorInfo() const;
+	
 	void TryActivateAbilityOnSpawn(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) const;
 	
 	EAbilityActivationPolicy GetActivationPolicy() const { return ActivationPolicy; }
