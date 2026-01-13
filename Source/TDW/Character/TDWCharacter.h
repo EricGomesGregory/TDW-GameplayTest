@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "TDWCharacter.generated.h"
 
+class UTDWCombatComponent;
 class UTDWManaComponent;
 class UTDWCombatSet;
 class UTDWManaSet;
@@ -31,6 +32,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	virtual void PossessedBy(AController* NewController) override;
+	virtual void UnPossessed() override;
+	
 	virtual void OnRep_PlayerState() override;
 	
 protected:
@@ -44,15 +47,12 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UTDWAbilitySystemComponent> AbilitySystemComponent;
-
-	UPROPERTY()
-	TObjectPtr<const UTDWHealthSet> HealthSet;
 	
 	UPROPERTY(VisibleAnywhere, Category="TDW|Ability System")
+	TObjectPtr<UTDWCombatComponent> CombatComponent;
+
+	UPROPERTY(VisibleAnywhere, Category="TDW|Ability System")
 	TObjectPtr<UTDWManaComponent> ManaComponent;
-	
-	UPROPERTY()
-	TObjectPtr<const UTDWCombatSet> CombatSet;
 	
 private:
 	/** Top down camera */

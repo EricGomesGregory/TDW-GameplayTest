@@ -20,7 +20,7 @@ class TDW_API UTDWManaComponent : public UActorComponent
 public:
 	UTDWManaComponent();
 
-	UFUNCTION(BlueprintPure, Category="TDW|ManaComponent")
+	UFUNCTION(BlueprintPure, Category="TDW|Mana")
 	static UTDWManaComponent* FindManaComponent(const AActor* Actor) { return (Actor ? Actor->FindComponentByClass<UTDWManaComponent>() : nullptr); }
 
 	// Initialize the component using an ability system component.
@@ -31,15 +31,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "TDW|Mana")
 	void UninitializeFromAbilitySystem();
 	
-	// Returns the current health value.
+	// Returns the current mana value.
 	UFUNCTION(BlueprintCallable, Category = "TDW|Mana")
 	float GetMana() const;
 
-	// Returns the current maximum health value.
+	// Returns the current maximum mana value.
 	UFUNCTION(BlueprintCallable, Category = "TDW|Mana")
 	float GetMaxMana() const;
 
-	// Returns the current health in the range [0.0, 1.0].
+	// Returns the current mana in the range [0.0, 1.0].
 	UFUNCTION(BlueprintCallable, Category = "TDW|Mana")
 	float GetManaNormalized() const;	
 	

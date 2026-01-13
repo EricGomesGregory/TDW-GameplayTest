@@ -2,6 +2,7 @@
 
 #include "TDW/Character/TDWCharacter.h"
 
+#include "TDWCombatComponent.h"
 #include "TDWManaComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
@@ -48,6 +49,7 @@ ATDWCharacter::ATDWCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
+	CombatComponent = CreateDefaultSubobject<UTDWCombatComponent>(TEXT("CombatComponent"));
 	ManaComponent = CreateDefaultSubobject<UTDWManaComponent>(TEXT("ManaComponent"));
 }
 
@@ -64,6 +66,14 @@ void ATDWCharacter::PossessedBy(AController* NewController)
 	SetupAbilities();
 }
 
+void ATDWCharacter::UnPossessed()
+{
+	Super::UnPossessed();
+
+	CombatComponent->UninitializeFromAbilitySystem();
+	ManaComponent->UninitializeFromAbilitySystem();
+}
+
 void ATDWCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
@@ -78,8 +88,8 @@ void ATDWCharacter::InitializeAbilityActorInfo()
 
 	AbilitySystemComponent = PS->GetTDWAbilitySystemComponent();
 	AbilitySystemComponent->InitAbilityActorInfo(PS, this);
-	HealthSet = PS->GetHealthSet();
-	CombatSet = PS->GetCombatSet();
+	
+	CombatComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
 	ManaComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
 }
 
