@@ -77,6 +77,21 @@ class TDWManaSet {
 
 ## Character
 
+
+### Abilities
+
+**UTDWGameplayAbility_Leap**
+- TDWGameplayAbility derived class
+- Handles leaping to a target location:
+    - Determined by the mouse for player triggered ability
+- (Optional) Triggers a child ability on landing
+
+**UTDWGameplayAbility_Burst**
+- TDWGameplayAbility derived class
+- Passive ability
+- Applies a list of *GameplayEffects* to characters in a radius
+
+
 ## Input
 
 **TDWInputConfig**
