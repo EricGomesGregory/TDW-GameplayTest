@@ -10,5 +10,6 @@ namespace TDWGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Skill1, "Input.Skill1", "Input tag for the 1st active skill");
 
 	UE_DEFINE_GAMEPLAY_TAG(Gameplay_AbilityInputBlocked, "Gameplay.AbilityInputBlocked");
-	
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_OutOfMana, "GameplayEvent.OutOfMana", "Event that fires on out of mana. This event only fires on the server.");
 }

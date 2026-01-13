@@ -11,5 +11,6 @@ namespace TDWGameplayTags
 	TDW_API		UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Skill1);
 
 	TDW_API		UE_DECLARE_GAMEPLAY_TAG_EXTERN(Gameplay_AbilityInputBlocked);
-	
+
+	TDW_API		UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_OutOfMana);
 }
