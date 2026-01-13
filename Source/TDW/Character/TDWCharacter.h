@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "TDWCharacter.generated.h"
 
+class UTDWManaComponent;
 class UTDWCombatSet;
 class UTDWManaSet;
 class UTDWHealthSet;
@@ -46,9 +47,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<const UTDWHealthSet> HealthSet;
-
-	UPROPERTY()
-	TObjectPtr<const UTDWManaSet> ManaSet;
+	
+	UPROPERTY(VisibleAnywhere, Category="TDW|Ability System")
+	TObjectPtr<UTDWManaComponent> ManaComponent;
 	
 	UPROPERTY()
 	TObjectPtr<const UTDWCombatSet> CombatSet;

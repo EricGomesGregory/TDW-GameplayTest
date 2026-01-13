@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TDW/Character/TDWCharacter.h"
+
+#include "TDWManaComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -45,6 +47,8 @@ ATDWCharacter::ATDWCharacter()
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
+
+	ManaComponent = CreateDefaultSubobject<UTDWManaComponent>(TEXT("ManaComponent"));
 }
 
 void ATDWCharacter::Tick(float DeltaSeconds)
@@ -76,7 +80,7 @@ void ATDWCharacter::InitializeAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(PS, this);
 	HealthSet = PS->GetHealthSet();
 	CombatSet = PS->GetCombatSet();
-	ManaSet = PS->GetManaSet();
+	ManaComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
 }
 
 void ATDWCharacter::SetupAbilities()

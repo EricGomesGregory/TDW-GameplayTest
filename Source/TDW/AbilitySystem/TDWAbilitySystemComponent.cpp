@@ -230,8 +230,7 @@ void UTDWAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec& S
 	if (Spec.IsActive())
 	{
 		// Invoke the InputPressed event. This is not replicated here. If someone is listening, they may replicate the InputPressed event to the server.
-		const auto ActivationInfo = Spec.Ability->GetCurrentActivationInfo();
-		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, ActivationInfo.GetActivationPredictionKey());
+		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, Spec.Ability->GetCurrentActivationInfo().GetActivationPredictionKey());
 	}
 }
 
