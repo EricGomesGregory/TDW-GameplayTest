@@ -64,6 +64,11 @@ ATDWCharacter* UTDWGameplayAbility::GetTDWCharacterFromActorInfo() const
 	return (CurrentActorInfo ? Cast<ATDWCharacter>(CurrentActorInfo->AvatarActor.Get()) : nullptr);
 }
 
+ACharacter* UTDWGameplayAbility::GetCharacterFromActorInfo() const
+{
+	return (CurrentActorInfo ? Cast<ACharacter>(CurrentActorInfo->AvatarActor.Get()) : nullptr);
+}
+
 void UTDWGameplayAbility::TryActivateAbilityOnSpawn(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) const
 {
 	// Try to activate if activation policy is on spawn.

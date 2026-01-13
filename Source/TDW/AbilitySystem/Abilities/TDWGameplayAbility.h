@@ -42,6 +42,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "TDW|Ability")
 	ATDWCharacter* GetTDWCharacterFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "TDW|Ability")
+	ACharacter* GetCharacterFromActorInfo() const;
 	
 	void TryActivateAbilityOnSpawn(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) const;
 	
