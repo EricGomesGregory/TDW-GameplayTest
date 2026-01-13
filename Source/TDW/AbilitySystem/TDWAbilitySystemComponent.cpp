@@ -230,7 +230,10 @@ void UTDWAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec& S
 	if (Spec.IsActive())
 	{
 		// Invoke the InputPressed event. This is not replicated here. If someone is listening, they may replicate the InputPressed event to the server.
-		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, Spec.Ability->GetCurrentActivationInfo().GetActivationPredictionKey());
+		//const auto ActivationInfo = Spec.Ability->GetCurrentActivationInfo();
+		const auto* Instance = Spec.GetPrimaryInstance();
+		const auto OriginalPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : Spec.ActivationInfo.GetActivationPredictionKey();
+		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, OriginalPredictionKey);
 	}
 }
 
@@ -241,9 +244,9 @@ void UTDWAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilitySpec& 
 	if (Spec.IsActive())
 	{
 		// Invoke the InputReleased event. This is not replicated here. If someone is listening, they may replicate the InputReleased event to the server.
-		const auto ActivationInfo = Spec.Ability->GetCurrentActivationInfo();
+		//const auto ActivationInfo = Spec.Ability->GetCurrentActivationInfo();
 		const auto* Instance = Spec.GetPrimaryInstance();
-		const auto OriginalPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : ActivationInfo.GetActivationPredictionKey();
+		const auto OriginalPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : Spec.ActivationInfo.GetActivationPredictionKey();
 		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, Spec.Handle, OriginalPredictionKey);
 	}
 }
