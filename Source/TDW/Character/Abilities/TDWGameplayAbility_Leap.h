@@ -19,6 +19,9 @@ public:
 	UTDWGameplayAbility_Leap();
 
 protected:
+	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+	virtual void OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
@@ -45,9 +48,19 @@ protected:
 	float LeapDuration;
 
 	UPROPERTY(EditDefaultsOnly, Category="TDW|Ability")
-	TSubclassOf<UTDWGameplayAbility> LandingAbility;
+	TArray<TSubclassOf<UTDWGameplayAbility>> LandingAbilities;
 
 private:
+
+	void GiveChildAbilities(UTDWAbilitySystemComponent* InASC, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec);
+
+	void TakeChildAbilities(UTDWAbilitySystemComponent* InASC);
+	
+private:
 	/**  */
+	UPROPERTY()
 	FVector TargetLocation;
+
+	UPROPERTY()
+	TArray<FGameplayAbilitySpecHandle> ChildAbilitySpecHandles;
 };

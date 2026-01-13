@@ -3,10 +3,10 @@
 
 #include "TDWGameplayAbility_Leap.h"
 
-#include "AbilitySystemComponent.h"
 #include "NavigationSystem.h"
 #include "Abilities/Tasks/AbilityTask_ApplyRootMotionJumpForce.h"
 #include "GameFramework/Character.h"
+#include "TDW/AbilitySystem/TDWAbilitySystemComponent.h"
 #include "TDW/Player/TDWPlayerController.h"
 
 
@@ -18,6 +18,42 @@ UTDWGameplayAbility_Leap::UTDWGameplayAbility_Leap()
 	LeapHeightCurve->FloatCurve.UpdateOrAddKey(0.0f, 150.0f);
 	LeapHeightCurve->FloatCurve.UpdateOrAddKey(1.0f, 600.0f);
 	LeapDuration	= 0.7f;
+
+	LandingAbilities.Empty();
+	
+	ChildAbilitySpecHandles.Empty();
+}
+
+void UTDWGameplayAbility_Leap::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+{
+	Super::OnGiveAbility(ActorInfo, Spec);
+
+	auto* TDWASC = GetTDWAbilitySystemComponentFromActorInfo();
+	check(TDWASC);
+
+	if (!TDWASC->IsOwnerActorAuthoritative())
+	{
+		// Must be authoritative to give or take ability sets.
+		return;
+	}
+	
+	GiveChildAbilities(TDWASC, ActorInfo, Spec);
+}
+
+void UTDWGameplayAbility_Leap::OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+{
+	Super::OnRemoveAbility(ActorInfo, Spec);
+
+	auto* TDWASC = GetTDWAbilitySystemComponentFromActorInfo();
+	check(TDWASC);
+
+	if (!TDWASC->IsOwnerActorAuthoritative())
+	{
+		// Must be authoritative to give or take ability sets.
+		return;
+	}
+	
+	TakeChildAbilities(TDWASC);
 }
 
 void UTDWGameplayAbility_Leap::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -47,9 +83,7 @@ void UTDWGameplayAbility_Leap::ActivateAbility(const FGameplayAbilitySpecHandle 
 		return;
 	}
 
-	auto* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
-
-	if (NavSys)
+	if (auto* NavSys = UNavigationSystemV1::GetCurrent(GetWorld()))
 	{
 		FNavLocation NavLoc;
 		if (NavSys->ProjectPointToNavigation(RawTargetLocation, NavLoc, FVector(200.f, 200.f, 500.f)))
@@ -101,26 +135,28 @@ void UTDWGameplayAbility_Leap::OnLanded()
 	auto* ASC = GetAbilitySystemComponentFromActorInfo();
 	check(ASC);
 
-	if (LandingAbility)
+	for (const auto& Ability : LandingAbilities)
 	{
-		ASC->TryActivateAbilityByClass(LandingAbility);
+		if (!IsValid(Ability)) { return ; }
+		
+		ASC->TryActivateAbilityByClass(Ability);
 	}
 }
 
 FVector UTDWGameplayAbility_Leap::ResolveTargetLocation(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayEventData* TriggerEventData) const
 {
-	AActor* Avatar = ActorInfo->AvatarActor.Get();
+	const auto* Avatar = GetAvatarActorFromActorInfo();
 
 	if (TriggerEventData)
 	{
 		if (TriggerEventData->Target)
+		{
 			return TriggerEventData->Target->GetActorLocation();
+		}
 
 		if (!TriggerEventData->TargetData.Data.IsEmpty())
 		{
-			if (const FGameplayAbilityTargetData_LocationInfo* Loc =
-				static_cast<const FGameplayAbilityTargetData_LocationInfo*>(
-					TriggerEventData->TargetData.Get(0)))
+			if (const FGameplayAbilityTargetData_LocationInfo* Loc = static_cast<const FGameplayAbilityTargetData_LocationInfo*>(TriggerEventData->TargetData.Get(0)))
 			{
 				return Loc->GetEndPoint();
 			}
@@ -130,11 +166,12 @@ FVector UTDWGameplayAbility_Leap::ResolveTargetLocation(const FGameplayAbilityAc
 	if (ActorInfo->PlayerController.IsValid())
 	{
 		FHitResult Hit;
-		ActorInfo->PlayerController->GetHitResultUnderCursor(
-			ECC_Visibility, false, Hit);
+		ActorInfo->PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, Hit);
 
 		if (Hit.bBlockingHit)
+		{
 			return Hit.ImpactPoint;
+		}
 	}
 
 	return Avatar->GetActorLocation() + Avatar->GetActorForwardVector() * MaxLeapDistance;
@@ -166,6 +203,35 @@ bool UTDWGameplayAbility_Leap::FindGroundAtLocation(const FVector& InLocation, F
 	}
 
 	return false;
+}
+
+void UTDWGameplayAbility_Leap::GiveChildAbilities(UTDWAbilitySystemComponent* InASC, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+{
+	check(InASC);
+	
+	if (LandingAbilities.Num() == 0) { return; }
+
+	for (const auto& Ability : LandingAbilities)
+	{
+		if (!IsValid(Ability)) { return ; }
+		
+		auto* AbilityCDO = Ability->GetDefaultObject<UTDWGameplayAbility>();
+		FGameplayAbilitySpec AbilitySpec(AbilityCDO, GetAbilityLevel());
+		AbilitySpec.SourceObject = GetSourceObject(Spec.Handle, ActorInfo);
+		
+		const FGameplayAbilitySpecHandle AbilitySpecHandle = InASC->GiveAbility(AbilitySpec);
+		ChildAbilitySpecHandles.Add(AbilitySpecHandle);
+	}
+}
+
+void UTDWGameplayAbility_Leap::TakeChildAbilities(UTDWAbilitySystemComponent* InASC)
+{
+	if (ChildAbilitySpecHandles.Num() == 0) { return; }
+
+	for (const auto& Handle : ChildAbilitySpecHandles)
+	{
+		InASC->ClearAbility(Handle);
+	}
 }
 
 
