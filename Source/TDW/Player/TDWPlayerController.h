@@ -54,6 +54,8 @@ public:
 
 	virtual void PreProcessInput(const float DeltaTime, const bool bGamePaused) override;
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
+
+	void ForceStopMovement();
 	
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */

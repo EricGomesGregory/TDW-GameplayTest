@@ -76,6 +76,11 @@ void ATDWPlayerController::PostProcessInput(const float DeltaTime, const bool bG
 	Super::PostProcessInput(DeltaTime, bGamePaused);
 }
 
+void ATDWPlayerController::ForceStopMovement()
+{
+	StopMovement();
+}
+
 void ATDWPlayerController::SetupInputComponent()
 {
 	// set up gameplay key bindings
