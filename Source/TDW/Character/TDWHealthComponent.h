@@ -10,6 +10,7 @@
 class UTDWHealthSet;
 class UTDWAbilitySystemComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTDWHealth_DeathEvent, AActor*, OwningActor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FTDWHealth_AttributeChanged, UTDWHealthComponent*, HealthComponent, float, OldValue, float, NewValue, AActor*, Instigator);
 
 
@@ -45,7 +46,7 @@ public:
 	// Returns the current health in the range [0.0, 1.0].
 	UFUNCTION(BlueprintCallable, Category = "TDW|Health")
 	float GetHealthNormalized() const;
-
+	
 protected:
 
 	virtual void HandleHealthChanged(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue);
@@ -62,9 +63,11 @@ public:
 	// Delegate fired when the max health value has changed. This is called on the client but the instigator may not be valid
 	UPROPERTY(BlueprintAssignable)
 	FTDWHealth_AttributeChanged OnMaxHealthChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FTDWHealth_DeathEvent OnDeath;
 	
 protected:
-
 	// Ability system used by this component.
 	UPROPERTY()
 	TObjectPtr<UTDWAbilitySystemComponent> AbilitySystemComponent;

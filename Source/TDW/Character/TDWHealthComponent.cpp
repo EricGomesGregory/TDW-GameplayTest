@@ -91,7 +91,10 @@ void UTDWHealthComponent::HandleMaxHealthChanged(AActor* Instigator, AActor* Cau
 
 void UTDWHealthComponent::HandleOutOfHealth(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue)
 {
-	//@Eric TODO: Trigger event for death 
+	AActor* Owner = GetOwner();
+	check(Owner);
+	
+	OnDeath.Broadcast(Owner);
 }
 
 
