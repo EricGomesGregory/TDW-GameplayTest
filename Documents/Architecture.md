@@ -6,7 +6,12 @@ This section describes the [Lyra Sample Game](https://dev.epicgames.com/document
 ## Ability System
 
 **TDWAbilitySystemComponent**
-- Ability system component derived class for the project
+- AbilitySystemComponent derived class
+- Handles activating abilities through gameplay tags
+
+**TDWAbilitySet**
+- DataAsset derived class
+- Handles listing GameplayAbilities, GameplayEffects and AttributeSets to be bound/unbound to a actor with a AbilitySystemComponent
 
 ### Abilities
 
@@ -14,6 +19,13 @@ This section describes the [Lyra Sample Game](https://dev.epicgames.com/document
 - GameplayAbility derived class
 - Abstract base class for all project gameplay abilities
 - Defines how abilities are triggered (InputTrigger, InputHeld, or OnSpawn)
+
+**UTDWGameplayAbility_Emanation**
+- TDWGameplayAbility derived class
+- Passive ability
+- Holds logic to detect actors in a radius, except for the avatar actor that is the center of the emanation.
+- Applies a list of *GameplayEffects* to characters in a radius centered around the avatar actor of the ability
+
 
 ### Attributes
 
@@ -77,19 +89,42 @@ class TDWManaSet {
 
 ## Character
 
+**TDWCharacter**
+- Character derived class
+- Currently the default player class for the player
+- Gets its AbilitySystemComponent from PlayerState on posession/PlayerState replication
+
+**TDWNonPlayerCharacter**
+- Character derived class
+- Currently the default NPC class for the scene dummies
+- Has is own AbilitySystemComponent
 
 ### Abilities
 
-**UTDWGameplayAbility_Leap**
+**TDWGameplayAbility_Leap**
 - TDWGameplayAbility derived class
 - Handles leaping to a target location:
     - Determined by the mouse for player triggered ability
 - (Optional) Triggers a child ability on landing
 
-**UTDWGameplayAbility_Emanation**
-- TDWGameplayAbility derived class
-- Passive ability
-- Applies a list of *GameplayEffects* to characters in a radius centered around the avatar actor of the ability
+**TDWGameplayAbility_Slam**
+- TDWGameplayAbility_Emanation derived class
+- Handles causing knock back in a radius to all actors inside the emanation
+
+### Components
+
+**TDWCombatComponent**
+- ActorComponent derived class
+- Handles interface between actors and the TDWCombatSet
+
+**TDWHealthComponent**
+- ActorComponent derived class
+- Handles interface between actors and the TDWHealthSet
+
+**TDWManaComponent**
+- ActorComponent derived class
+- Handles interface between actors and the TDWManaSet
+- Currently excusive to the player character blueprint
 
 
 ## Input
