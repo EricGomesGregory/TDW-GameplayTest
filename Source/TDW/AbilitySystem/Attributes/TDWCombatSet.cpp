@@ -6,9 +6,9 @@
 #include "Net/UnrealNetwork.h"
 
 UTDWCombatSet::UTDWCombatSet()
-: AttackSpeed(1.0f)
+: AttackSpeed(1.0f), BaseDamage(10.0f),
+BaseHeal(0.f), BaseManaRegen(0.f)
 {
-		
 }
 
 void UTDWCombatSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
