@@ -188,9 +188,9 @@ float UTDWGameplayAbility_Leap::ResolveLeapDuration(const FGameplayAbilityActorI
 	const auto* Avatar = ActorInfo->AvatarActor.Get();
 	check(Avatar);
 
-	if (auto* AvatarCombatComponent = UTDWCombatComponent::FindCombatComponent(Avatar))
+	if (const auto* AvatarCombatComponent = UTDWCombatComponent::FindCombatComponent(Avatar))
 	{
-		auto CurrentAttackSpeed = AvatarCombatComponent->GetAttackSpeed();
+		const auto CurrentAttackSpeed = AvatarCombatComponent->GetAttackSpeed();
 		return LeapDurationCurve->GetFloatValue(CurrentAttackSpeed);
 	}
 
