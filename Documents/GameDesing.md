@@ -1,3 +1,5 @@
+- [README](../README.md)
+
 # Game Desing
 This section describes the game design considerations of the Leap Slam ability.
 
@@ -12,6 +14,6 @@ To implement the slam in a modular way I borrowed a concept from the ttrpg [Path
 
 This ability was used to make the Slam ability but could also be used to make aura-like effects or even explosive enemies with abilities.
 
-> ### Maybe in the Future
-> If I were to reimplement this ability I might make the Emanation int a AbilityTask as well as the Knockback.
+> ### In Retrospect
+> Maybe in the future, if I were to reimplement this ability I might make the Emanation int a AbilityTask as well as the Knockback.
 >
