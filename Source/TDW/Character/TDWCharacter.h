@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
 #include "TDWCharacter.generated.h"
 
@@ -19,7 +20,7 @@ class UTDWAbilitySet;
 
 
 UCLASS(Blueprintable)
-class ATDWCharacter : public ACharacter
+class ATDWCharacter : public ACharacter, public  IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -35,6 +36,10 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
+	UFUNCTION(BlueprintPure, Category = "TDW|Character")
+	FORCEINLINE UTDWAbilitySystemComponent* GetTDWAbilitySystemComponent() const { return AbilitySystemComponent; }
+	virtual  UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
 	UFUNCTION(BlueprintPure, Category = "TDW|Character")
 	FORCEINLINE UTDWCombatComponent* GetCombatComponent() const { return CombatComponent; }
 

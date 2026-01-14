@@ -60,6 +60,11 @@ void ATDWCharacter::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
 }
 
+UAbilitySystemComponent* ATDWCharacter::GetAbilitySystemComponent() const
+{
+	return GetTDWAbilitySystemComponent();
+}
+
 void ATDWCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
