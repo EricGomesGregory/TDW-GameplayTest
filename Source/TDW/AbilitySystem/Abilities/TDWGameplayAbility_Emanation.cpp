@@ -14,15 +14,10 @@ UTDWGameplayAbility_Emanation::UTDWGameplayAbility_Emanation()
 	ActivationPolicy = EAbilityActivationPolicy::OnSpawn;
 	
 	EmanationRadius = 250.0f;
-
-	bHasKnockback = false;
-	KnockbackForce = 50.0f;
 }
 
-void UTDWGameplayAbility_Emanation::ActorEmanationDoOnce()
+bool UTDWGameplayAbility_Emanation::GetActorsInEmanation(TArray<AActor*>& OutActors)
 {
-	if (EmanationEffects.Num() == 0) { return; }
-
 	TArray<FOverlapResult> Overlaps;
 	const FCollisionShape Sphere = FCollisionShape::MakeSphere(EmanationRadius);
 
@@ -34,42 +29,36 @@ void UTDWGameplayAbility_Emanation::ActorEmanationDoOnce()
 #if !UE_BUILD_SHIPPING
 	DrawDebugSphere(GetWorld(), TargetLocation, EmanationRadius, 12, FColor::Red, false, 1, 0, 1);
 #endif // UE_BUILD_SHIPPING
-	
-	auto* ASC = GetAbilitySystemComponentFromActorInfo();
 
 	for (const FOverlapResult& Result : Overlaps)
 	{
-		const auto* Target = Result.GetActor();
+		auto* Target = Result.GetActor();
 		if (!Target || Target == GetAvatarActorFromActorInfo()) { continue; }
 
-		if (auto* TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Target))
-		{
-			ApplyEffectsToTaget(ASC, TargetASC);
-		}
+		OutActors.Add(Target);
 	}
+
+	return OutActors.IsEmpty();
 }
 
-void UTDWGameplayAbility_Emanation::ActorEmanationStart()
+void UTDWGameplayAbility_Emanation::ApplyEffectsToTaget(UAbilitySystemComponent* TargetASC)
 {
-	if (EmanationEffects.Num() == 0) { return; }
+	if (!TargetASC) { return; }
+	
+	auto* ASC = GetAbilitySystemComponentFromActorInfo();
+	check(ASC);
 
-	//@Eric TODO: Implement in the future for aura-like abilities
-}
-
-void UTDWGameplayAbility_Emanation::ActorEmanationStop()
-{
-	if (EmanationEffects.Num() == 0) { return; }
-
-	//@Eric TODO: Implement in the future for aura-like abilities 
-}
-
-void UTDWGameplayAbility_Emanation::ApplyEffectsToTaget(UAbilitySystemComponent* SourceASC, UAbilitySystemComponent* TargetASC)
-{
 	for (const auto& Effect : EmanationEffects)
 	{
 		FGameplayEffectSpecHandle Spec = MakeOutgoingGameplayEffectSpec(Effect, GetAbilityLevel());
 
-		SourceASC->ApplyGameplayEffectSpecToTarget(*Spec.Data.Get(), TargetASC);
+		ASC->ApplyGameplayEffectSpecToTarget(*Spec.Data.Get(), TargetASC);
 	}
 }
+
+FVector UTDWGameplayAbility_Emanation::GetEmanationOrigin() const
+{
+	return GetAvatarActorFromActorInfo()->GetActorLocation();
+}
+
 

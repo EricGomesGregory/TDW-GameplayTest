@@ -19,17 +19,15 @@ public:
 	UTDWGameplayAbility_Emanation();
 
 protected:
-	
-	UFUNCTION(BlueprintCallable, Category="TDW|Ability")
-	void ActorEmanationDoOnce();
-	
-	UFUNCTION(BlueprintCallable, Category="TDW|Ability")
-	void ActorEmanationStart();
 
 	UFUNCTION(BlueprintCallable, Category="TDW|Ability")
-	void ActorEmanationStop();
+	bool GetActorsInEmanation(TArray<AActor*>& OutActors);
 
-	void ApplyEffectsToTaget(UAbilitySystemComponent* SourceASC, UAbilitySystemComponent* TargetASC);
+	UFUNCTION(BlueprintCallable, Category="TDW|Ability")
+	void ApplyEffectsToTaget(UAbilitySystemComponent* TargetASC);
+
+	UFUNCTION(BlueprintCallable, Category="TDW|Ability")
+	FVector GetEmanationOrigin() const;
 	
 protected:
 
@@ -38,10 +36,4 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="TDW|Ability")
 	TArray<TSubclassOf<UGameplayEffect>> EmanationEffects;
-	
-	UPROPERTY(EditDefaultsOnly, Category="TDW|Ability")
-	bool bHasKnockback;
-
-	UPROPERTY(EditDefaultsOnly, Category="TDW|Ability", meta=(EditConditionHides, EditCondition="bHasKnockback"))
-	float KnockbackForce;
 };
