@@ -7,9 +7,10 @@
 #include "Components/ActorComponent.h"
 #include "TDWManaComponent.generated.h"
 
-
 class UTDWManaSet;
 class UTDWAbilitySystemComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FTDWMana_AttributeChanged, UTDWManaComponent*, ManaComponent, float, OldValue, float, NewValue, AActor*, Instigator);
 
 
 UCLASS(Blueprintable, Meta=(BlueprintSpawnableComponent))
@@ -18,6 +19,7 @@ class TDW_API UTDWManaComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
+	/**  */
 	UTDWManaComponent();
 
 	UFUNCTION(BlueprintPure, Category="TDW|Mana")
@@ -49,6 +51,15 @@ protected:
 	virtual void HandleMaxManaChanged(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue);
 	virtual void HandleOutOfMana(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue);
 
+public:
+
+	// Delegate fired when the mana value has changed. This is called on the client but the instigator may not be valid
+	UPROPERTY(BlueprintAssignable)
+	FTDWMana_AttributeChanged OnManaChanged;
+
+	// Delegate fired when the max mana value has changed. This is called on the client but the instigator may not be valid
+	UPROPERTY(BlueprintAssignable)
+	FTDWMana_AttributeChanged OnMaxManaChanged;
 	
 protected:
 

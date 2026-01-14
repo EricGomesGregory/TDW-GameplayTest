@@ -47,7 +47,15 @@ void UTDWManaComponent::InitializeWithAbilitySystem(UTDWAbilitySystemComponent* 
 
 void UTDWManaComponent::UninitializeFromAbilitySystem()
 {
-	
+	if (ManaSet)
+	{
+		ManaSet->OnManaChanged.RemoveAll(this);
+		ManaSet->OnMaxManaChanged.RemoveAll(this);
+		ManaSet->OnOutOfMana.RemoveAll(this);
+	}
+
+	ManaSet = nullptr;
+	AbilitySystemComponent = nullptr;
 }
 
 float UTDWManaComponent::GetMana() const
@@ -75,6 +83,8 @@ float UTDWManaComponent::GetManaNormalized() const
 
 void UTDWManaComponent::HandleManaChanged(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue)
 {
+	OnManaChanged.Broadcast(this, OldValue, NewValue, Instigator);
+	
 	//@Eric TODO: Hacky solution, update in the future 
 	if (AbilitySystemComponent && OldValue == 0.0f && NewValue != 0.0f)
 	{
@@ -87,7 +97,7 @@ void UTDWManaComponent::HandleManaChanged(AActor* Instigator, AActor* Causer, co
 
 void UTDWManaComponent::HandleMaxManaChanged(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue)
 {
-	
+	OnMaxManaChanged.Broadcast(this, OldValue, NewValue, Instigator);
 }
 
 void UTDWManaComponent::HandleOutOfMana(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue)
@@ -109,13 +119,13 @@ void UTDWManaComponent::HandleOutOfMana(AActor* Instigator, AActor* Causer, cons
 		FScopedPredictionWindow NewScopedWindow(AbilitySystemComponent, true);
 		AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
 	}
+	
+	//@Eric TODO: Maybe implement additional messages using GameplayMessageSubsystem 
+	
+#endif // WITH_SERVER_CODE
 
 	//@Eric TODO: Hacky solution, update in the future 
 	AbilitySystemComponent->AddLooseGameplayTag(TDWGameplayTags::GameplayEvent_OutOfMana);
-	
-	//@Eric TODO: Maybe implement additional messages using GameplayMessageSubsystem
-	
-#endif // WITH_SERVER_CODE
 }
 
 

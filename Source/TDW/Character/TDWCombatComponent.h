@@ -7,9 +7,10 @@
 #include "Components/ActorComponent.h"
 #include "TDWCombatComponent.generated.h"
 
-
 class UTDWCombatSet;
 class UTDWAbilitySystemComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FTDWCombat_AttributeChanged, UTDWCombatComponent*, CombatComponent, float, OldValue, float, NewValue, AActor*, Instigator);
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -18,7 +19,7 @@ class TDW_API UTDWCombatComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
+	/**  */
 	UTDWCombatComponent();
 
 	UFUNCTION(BlueprintPure, Category="TDW|Combat")
@@ -54,6 +55,19 @@ protected:
 	virtual void HandleBaseDamageChange(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue);
 	virtual void HandleBaseHealingChange(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue);
 	virtual void HandleManaRegenerationChange(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue);
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FTDWCombat_AttributeChanged OnAttackSpeedChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FTDWCombat_AttributeChanged OnBaseDamageChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FTDWCombat_AttributeChanged OnBaseHealingChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FTDWCombat_AttributeChanged OnBaseManaRegenerationChanged;
 	
 protected:
 	// Ability system used by this component.

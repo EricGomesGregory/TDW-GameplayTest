@@ -3,6 +3,7 @@
 #include "TDW/Character/TDWCharacter.h"
 
 #include "TDWCombatComponent.h"
+#include "TDWHealthComponent.h"
 #include "TDWManaComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
@@ -50,6 +51,7 @@ ATDWCharacter::ATDWCharacter()
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
 	CombatComponent = CreateDefaultSubobject<UTDWCombatComponent>(TEXT("CombatComponent"));
+	HealthComponent = CreateDefaultSubobject<UTDWHealthComponent>(TEXT("HealthComponent"));
 	ManaComponent = CreateDefaultSubobject<UTDWManaComponent>(TEXT("ManaComponent"));
 }
 

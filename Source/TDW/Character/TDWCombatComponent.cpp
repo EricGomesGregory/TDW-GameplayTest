@@ -46,12 +46,21 @@ void UTDWCombatComponent::InitializeWithAbilitySystem(UTDWAbilitySystemComponent
 	}
 
 	CombatSet->OnAttackSpeedChanged.AddUObject(this, &ThisClass::HandleAttackSpeedChange);
-	
 }
 
 void UTDWCombatComponent::UninitializeFromAbilitySystem()
 {
+	if (CombatSet)
+	{
+		CombatSet->OnAttackSpeedChanged.RemoveAll(this);
+		CombatSet->OnBaseDamageChanged.RemoveAll(this);
+
+		CombatSet->OnBaseHealChanged.RemoveAll(this);
+		CombatSet->OnBaseManaRegenChanged.RemoveAll(this);
+	}
 	
+	CombatSet = nullptr;
+	AbilitySystemComponent = nullptr;
 }
 
 float UTDWCombatComponent::GetAttackSpeed() const
@@ -76,22 +85,22 @@ float UTDWCombatComponent::GetBaseManaRegeneration() const
 
 void UTDWCombatComponent::HandleAttackSpeedChange(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue)
 {
-	
+	OnAttackSpeedChanged.Broadcast(this, OldValue, NewValue, Instigator);
 }
 
 void UTDWCombatComponent::HandleBaseDamageChange(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue)
 {
-	
+	OnBaseDamageChanged.Broadcast(this, OldValue, NewValue, Instigator);
 }
 
 void UTDWCombatComponent::HandleBaseHealingChange(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue)
 {
-	
+	OnBaseHealingChanged.Broadcast(this, OldValue, NewValue, Instigator);
 }
 
 void UTDWCombatComponent::HandleManaRegenerationChange(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float Magnitude, float OldValue, float NewValue)
 {
-	
+	OnBaseManaRegenerationChanged.Broadcast(this, OldValue, NewValue, Instigator);
 }
 
 

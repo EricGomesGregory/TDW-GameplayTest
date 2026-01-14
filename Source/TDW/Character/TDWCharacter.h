@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "TDWCharacter.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+class UTDWHealthComponent;
 class UTDWCombatComponent;
 class UTDWManaComponent;
 class UTDWCombatSet;
@@ -27,10 +30,20 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	/** Returns TopDownCameraComponent subobject **/
-	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	FORCEINLINE UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
 
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	UFUNCTION(BlueprintPure, Category = "TDW|Character")
+	FORCEINLINE UTDWCombatComponent* GetCombatComponent() const { return CombatComponent; }
+
+	UFUNCTION(BlueprintPure, Category = "TDW|Character")
+	FORCEINLINE UTDWHealthComponent* GetHealthComponent() const { return HealthComponent; }
+
+	UFUNCTION(BlueprintPure, Category = "TDW|Character")
+	FORCEINLINE UTDWManaComponent* GetManaComponent() const { return ManaComponent; }
+	
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void UnPossessed() override;
 	
@@ -42,25 +55,28 @@ protected:
 	void SetupAbilities();
 	
 protected:
-	UPROPERTY(EditAnywhere, Category="TDW|Ability System")
+	UPROPERTY(EditAnywhere, Category="TDW|Character")
 	TObjectPtr<UTDWAbilitySet> AbilitySet;
 
 	UPROPERTY()
 	TObjectPtr<UTDWAbilitySystemComponent> AbilitySystemComponent;
 	
-	UPROPERTY(VisibleAnywhere, Category="TDW|Ability System")
+	UPROPERTY(VisibleAnywhere, Category="TDW|Character")
 	TObjectPtr<UTDWCombatComponent> CombatComponent;
 
-	UPROPERTY(VisibleAnywhere, Category="TDW|Ability System")
+	UPROPERTY(VisibleAnywhere, Category="TDW|Character")
+	TObjectPtr<UTDWHealthComponent> HealthComponent;
+	
+	UPROPERTY(VisibleAnywhere, Category="TDW|Character")
 	TObjectPtr<UTDWManaComponent> ManaComponent;
 	
 private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* TopDownCameraComponent;
+	UCameraComponent* TopDownCameraComponent;
 
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+	USpringArmComponent* CameraBoom;
 };
 
